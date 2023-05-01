@@ -1,6 +1,6 @@
 import discord
 from discord_bot_project.formatting import format_price_embed
-from discord_bot_project.api import get_crypto_price
+from discord_bot_project.api import get_crypto_data
 from discord_bot_project.chart import plot_historical_data
 from discord_bot_project.config import IMGUR_CLIENT_ID
 from discord_bot_project.error_handling import InvalidSymbolError, APIError
@@ -37,7 +37,7 @@ async def on_message(message):
         
         try:
             # Get the name and prices for the given token symbol.
-            token_name, prices = get_crypto_price(token_symbol)
+            token_name, prices = get_crypto_data(token_symbol)
 
             # Get a URL for an image of a historical price chart for the token.
             imgur_url = plot_historical_data(token_name, 30, IMGUR_CLIENT_ID)

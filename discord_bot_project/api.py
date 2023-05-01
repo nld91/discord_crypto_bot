@@ -1,6 +1,6 @@
 import requests
 from enum import Enum
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Union
 from datetime import datetime
 from discord_bot_project.cache import cache_data
 from discord_bot_project.error_handling import handle_api_error
@@ -42,7 +42,7 @@ def make_request(token_symbol: str) -> List[dict]:
 
 
 @cache_data(cache_key_prefix="get_crypto_price")
-def get_crypto_price(token_symbol: str) -> Tuple[str, Dict[str, float]]:
+def get_crypto_data(token_symbol: str) -> Tuple[str, Dict[str, List[Union[str, float, float]]]]:
     """
     Returns the current price of a cryptocurrency in the specified currency, utilising the CoinMarketCap API. 
     Caches data to be used in future searches using TTLCache.
@@ -51,36 +51,21 @@ def get_crypto_price(token_symbol: str) -> Tuple[str, Dict[str, float]]:
     token_symbol (str): The symbol of the cryptocurrency to retrieve the price of.
 
     Returns:
-    Tuple[str, Dict[str, float]]: A tuple containing the name of the cryptocurrency and a dictionary mapping each currency to its respective price for the specified cryptocurrency.
+    Tuple[str, Dict[str, List[Union[str, float, float]]]]: A tuple containing the name of the cryptocurrency and a dictionary mapping each currency to a list containing the token symbol, price, and 24-hour percent change for the specified cryptocurrency.
     """
-    
     data_list = make_request(token_symbol)
 
     name = data_list[0]["data"][token_symbol]["name"]
 
-    prices = {}
+    crypto_data = {}
     
     for data, currency in zip(data_list, FiatCurrency):
-        prices[currency.value] = data["data"][token_symbol]["quote"][currency.value]["price"]
+        price = data["data"][token_symbol]["quote"][currency.value]["price"]
+        percent_change_24h = data["data"][token_symbol]["quote"][currency.value]["percent_change_24h"]
+        crypto_data[currency.value] = [token_symbol, price, percent_change_24h]
             
-    return name, prices
+    return name, crypto_data
 
-
-@cache_data(cache_key_prefix="get_24h_percentage")
-def get_24h_percentage(symbol: str) -> Dict[str, float]:
-    """
-    Returns the 24h percentage change of a cryptocurrency in the specified currency, utilising CoinMarketCap API. 
-    Caches data to be used in future searches using TTLCache
-    """
-    
-    data = make_request(symbol)
-
-    percent_change_24h = {}
-    
-    for currency in FiatCurrency:
-        percent_change_24h[currency.value] = data["data"][symbol]["quote"][currency.value]["percent_change_24h"]
-
-    return percent_change_24h
 
 
 @cache_data(cache_key_prefix="get_historical_data")
