@@ -63,7 +63,8 @@ def get_crypto_data(token_symbol: str) -> Tuple[str, Dict[str, List[Union[str, f
         price = data["data"][token_symbol]["quote"][currency.value]["price"]
         percent_change_24h = data["data"][token_symbol]["quote"][currency.value]["percent_change_24h"]
         crypto_data[currency.value] = [token_symbol, price, percent_change_24h]
-            
+
+    print(crypto_data)        
     return name, crypto_data
 
 
