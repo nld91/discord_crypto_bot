@@ -4,13 +4,22 @@ A simple Discord bot that provides real-time cryptocurrency prices and historica
 
 Both API's are free use, CoinMarketCap requires an API key and account, CoinGecko does not but you are limited to a certain number of requests per hour.
 
+Graphing is handled by matplotlib but the image is uploaded to Imgur via their API.
+
 ## Installation
 
 1. Clone the repository.
 2. Install the required dependencies using `pip install -r requirements.txt`.
-3. Set up a Discord bot account and obtain its token.
-4. Set the bot token in the `config.py` file.
-5. Run the bot using `python3 main.py`.
+3. Set up a Discord bot account [here](https://discord.com/developers/applications) and obtain a token for your bot.
+4. Set up a CoinMarketCap pro account [here](https://pro.coinmarketcap.com/account) to obtain your API key.
+5. Set up an Imgur account and go [here](https://api.imgur.com/oauth2/addclient) to register an application for your bots graph images.
+6. Create a .env file with the following format:
+```
+DISCORD_TOKEN=<your_discord_bot_token_here>
+CMC_API_KEY=<your_coinmarketcap_api_key_here>
+IMGUR_CLIENT_ID=<your_imgur_client_id_here>
+```
+7. Run the bot using `python3 main.py`.
 
 ## Usage
 
@@ -23,6 +32,8 @@ For example:
 - `!BTC`
 - `!ETH`
 - `!BNB`
+
+*Where historical data can not be found the bot will still return current price information but no graph will be shown*
 
 ## Contributing
 
