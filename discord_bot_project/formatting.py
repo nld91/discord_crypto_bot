@@ -27,7 +27,7 @@ def format_price_embed(token_name: str, token_symbol: str, prices: dict, changes
     for currency_code, price in prices.items():
 
         # Get correct FIAT symbol for currency code
-        fiat_symbol = currency_symbols.get(currency_code, currency_code))
+        fiat_symbol = currency_symbols.get(currency_code, currency_code)
 
         # Determine whether to include a + or - sign before the 24h change value
         if changes_24h >= 0:
