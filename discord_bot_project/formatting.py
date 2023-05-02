@@ -30,7 +30,7 @@ def format_price_embed(token_name: str, token_symbol: str, token_prices: dict, t
     embed_author_url = "https://github.com/nld91"
 
     # Define the embed title and description objects
-    embed_title = f"{token_name} {token_symbol}"
+    embed_title = f"{token_name} ```{token_symbol}```"
     embed_description = f"Current price data for the {token_name} token:"
     
     # Create an embed object
