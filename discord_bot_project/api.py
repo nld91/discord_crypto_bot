@@ -42,30 +42,37 @@ def make_request(token_symbol: str) -> List[dict]:
 
 
 @cache_data(cache_key_prefix="get_crypto_price")
-def get_crypto_data(token_symbol: str) -> Tuple[str, Dict[str, List[Union[str, float, float]]]]:
+def get_crypto_data(token_symbol: str) -> Tuple[str, Dict[str, float], List[float]]:
     """
-    Returns the current price of a cryptocurrency in the specified currency, utilising the CoinMarketCap API. 
-    Caches data to be used in future searches using TTLCache.
+    Returns the name, current price and percent changes for 1h, 24h and 30d periods of a given cryptocurrency symbol.
+    Uses the CoinMarketCap API.
 
     Parameters:
     token_symbol (str): The symbol of the cryptocurrency to retrieve the price of.
 
     Returns:
-    Tuple[str, Dict[str, List[Union[str, float, float]]]]: A tuple containing the name of the cryptocurrency and a dictionary mapping each currency to a list containing the token symbol, price, and 24-hour percent change for the specified cryptocurrency.
+    
     """
     data_list = make_request(token_symbol)
 
-    name = data_list[0]["data"][token_symbol]["name"]
+    token_name = data_list[0]["data"][token_symbol]["name"]
 
-    crypto_data = {}
-    
+    token_prices = {}
+
     for data, currency in zip(data_list, FiatCurrency):
-        price = data["data"][token_symbol]["quote"][currency.value]["price"]
-        percent_change_24h = data["data"][token_symbol]["quote"][currency.value]["percent_change_24h"]
-        crypto_data[currency.value] = [token_symbol, price, percent_change_24h]
+        currency_value = currency.value
+        current_price = data["data"][token_symbol]["quote"][currency_value]["price"]
+        token_prices[currency_value] = current_price
 
-    print(crypto_data)        
-    return name, crypto_data
+    token_changes = []
+    
+    change_1h = data_list[0]["data"][token_symbol]["quote"]["USD"]["percent_change_1h"]
+    change_24h = data_list[0]["data"][token_symbol]["quote"]["USD"]["percent_change_24h"]
+    change_30d = data_list[0]["data"][token_symbol]["quote"]["USD"]["percent_change_30d"]
+
+    token_changes = [change_1h, change_24h, change_30d]
+    
+    return token_name, token_prices, token_changes
 
 
 

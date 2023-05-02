@@ -37,13 +37,13 @@ async def on_message(message):
         
         try:
             # Get the token name and crypto data for the given token symbol.
-            token_name, crypto_data = get_crypto_data(token_symbol)
+            token_name, token_prices, token_changes = get_crypto_data(token_symbol)
 
             # Get a URL for an image of a historical price chart for the token.
             imgur_url = plot_historical_data(token_name, 30, IMGUR_CLIENT_ID)
             
             # Format an embed message to post as a response
-            embed = format_price_embed(token_name, token_symbol, crypto_data, imgur_url)
+            embed = format_price_embed(token_name, token_symbol, token_prices, token_changes, imgur_url)
 
             # Send the formatted message to the channel
             await channel.send(embed=embed)
